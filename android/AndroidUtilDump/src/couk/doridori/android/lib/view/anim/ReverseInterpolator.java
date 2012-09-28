@@ -23,7 +23,7 @@ public class ReverseInterpolator implements Interpolator {
         if(input <= 0.5){
             return input*2;
         }else{
-            return -(input-1)*2;
+            return Math.abs(input-1)*2;
         }
     }
 }
