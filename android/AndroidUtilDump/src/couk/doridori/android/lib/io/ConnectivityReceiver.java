@@ -10,6 +10,8 @@ import android.net.NetworkInfo;
 /**
  * A receiver for checking network status changes.
  *
+ * Make sure to set <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> in your manifest
+ *
  * User: doriancussen
  * Date: 31/10/2012
  */
