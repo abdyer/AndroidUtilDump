@@ -18,6 +18,17 @@ public class StateMachine {
         nextState.enteringState();
     }
 
+    /**
+     * Convenience method. This can be called when you are finishing with the state machine to trigger any cleanup
+     * code in your last state inside the {@link StateMachine.State#exitingState()} method
+     */
+    public void finish(){
+        if(null != mCurrentState)
+            mCurrentState.exitingState();
+
+        mCurrentState = null;
+    }
+
     public static abstract class State{
         public void enteringState(){};
         public void exitingState(){};
