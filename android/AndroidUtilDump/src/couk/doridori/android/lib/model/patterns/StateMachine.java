@@ -18,8 +18,8 @@ public class StateMachine {
         nextState.enteringState();
     }
 
-    public abstract class State{
-        public abstract void enteringState();
-        public abstract void exitingState();
+    public static abstract class State{
+        public void enteringState(){};
+        public void exitingState(){};
     }
 }
