@@ -5,6 +5,7 @@
     <excludeFromCompile>
       <directory url="file://$PROJECT_DIR$/gen" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/../Test/gen" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/../ABS 4_2_0/gen" includeSubdirectories="true" />
     </excludeFromCompile>
     <resourceExtensions />
     <wildcardResourcePatterns>
