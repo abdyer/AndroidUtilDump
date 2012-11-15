@@ -2,6 +2,7 @@ package couk.doridori.android.lib.testing;
 
 import android.os.Handler;
 import android.os.HandlerThread;
+import couk.doridori.android.lib.util.XLog;
 import org.apache.http.MethodNotSupportedException;
 
 import java.util.concurrent.*;
@@ -12,14 +13,18 @@ import java.util.concurrent.*;
  * <li>CountDownLatch - this will basically just cause the main thread to wait - this is not that useful for Android style async callbacks which generally seem to be initiated via Loopers / Handlers and get called on the main thread anyway. The thread would just wait and then the callback would come after the assert</li>
  * <li>FutureTask - this needs the Runnable / Callable thats passed in to return a result / exception. When the run or call method exits any threads waiting on the FutureRunnable will be released - not good for asyncrounous calls with callbacks on the same thread!</li>
  * </or>
- * <p>What this class will do utilise Loopers and Latches to provide a simple to use class for testing those async calls Android style!</p>
+ * <p>What this class will do utilise Loopers and Latches to provide a simple to use class for testing those async calls Android style! The extending of HandlerThread means that the run method is looping and wont just close after a passed in Runnables.run() method is called (which would be useless for async). Also it means any handlers that are created by the called async methods can communicate back to this worker thread. If we did this using a thread without a looper this aspect would not work.</p>
  * <p>While its common to mock out a lot of these types of calls I want to test a remote api with multiple user types and a class that does this is very much needed for me!</p>
  *
  * <b>From API level 9 onwards - shouldnt matter as TEST proj only</b>
  */
-public abstract class FutureAsyncTest<T> extends HandlerThread implements RunnableFuture<FutureAsyncTestResult<T>> {
+public abstract class FutureAsyncTest<T> implements RunnableFuture<FutureAsyncTestResult<T>> {
 
+    private HandlerThread mHandlerThread;
     private FutureAsyncTestResult<T> mResult;
+    /**
+     * The countDownLatch here is just used for blocking behaviour (with an optional timeout setting) to support the RunnableFuture inherited get() methods
+     */
     private CountDownLatch mCountDownLatch;
     /**
      * To communicate with the worker looper
@@ -28,30 +33,27 @@ public abstract class FutureAsyncTest<T> extends HandlerThread implements Runnab
     private boolean mHasStarted = false;
 
     public FutureAsyncTest() {
-        super(FutureAsyncTest.class.getName());
         mCountDownLatch = new CountDownLatch(1);
+        mHandlerThread = new HandlerThread(FutureAsyncTest.class.getName());
+
     }
 
-    @Override
-    public synchronized void start() {
-        throw new RuntimeException(new MethodNotSupportedException("not supported - super.start() is called in the get() methods"));
-    }
-
-    @Override
-    public final void run() {
-        super.run(); //start looper
-
+    public void start(){
         if(mHasStarted)
-            throw new RuntimeException("can only call run() and start ONCE!");
+            throw new RuntimeException("only call start() once");
 
-        mHandler = new Handler(getLooper());
+        mHasStarted = true;
+
+        mHandlerThread.start();
+        mHandler = new Handler(mHandlerThread.getLooper());
         mHandler.post(this);
     }
 
     /**
      * Override this and call setResult() methods in your async callbacks
      */
-    public abstract void runTest();
+    @Override
+    public abstract void run();
 
     @Override
     public boolean cancel(boolean mayInterruptIfRunning) {
@@ -68,22 +70,49 @@ public abstract class FutureAsyncTest<T> extends HandlerThread implements Runnab
         return null != mResult;
     }
 
+    /**
+     * Will call start() and therefore internally call {@link #run()}
+     *
+     * @return
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
     @Override
     public FutureAsyncTestResult<T> get() throws InterruptedException, ExecutionException {
-        super.start();
+        start();
         mCountDownLatch.await();
         return mResult;
     }
 
+    /**
+     * Will call start() and therefore internally call {@link #run()}
+     *
+     * @param timeout
+     * @param unit
+     * @return
+     * @throws InterruptedException
+     */
     @Override
     public FutureAsyncTestResult<T> get(long timeout, TimeUnit unit) throws InterruptedException {
-        super.start();
+        XLog.d();
+        start();
+        XLog.d(Thread.currentThread().getName());
         mCountDownLatch.await(timeout, unit);
+        XLog.d();
         return mResult;
     }
 
+    /**
+     * This should be called from inside your overridden {@link #run()} implementation. These args will be wrapped
+     * and passed back from your get() method.
+     *
+     * @param result if successful set a result
+     * @param e if an exception is caught set this instead (marking failure)
+     */
     public synchronized void setResult(T result, Exception e){
+        XLog.d("Future");
         mResult = new FutureAsyncTestResult<T>(result, e);
         mCountDownLatch.countDown();
+        mHandlerThread.quit();
     }
 }
