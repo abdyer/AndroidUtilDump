@@ -2,23 +2,22 @@ package couk.doridori.android.lib.testing;
 
 import android.os.Handler;
 import android.os.HandlerThread;
-import couk.doridori.android.lib.util.XLog;
 import org.apache.http.MethodNotSupportedException;
 
 import java.util.concurrent.*;
 
 /**
- * <p>Class for testing async methods. We cant use CountDownLatch of Futures as they are for the following reasons.</p>
+ * <p>Class for testing async methods. We cant use CountDownLatch or Futures individually for the following reasons.</p>
  * <or>
  * <li>CountDownLatch - this will basically just cause the main thread to wait - this is not that useful for Android style async callbacks which generally seem to be initiated via Loopers / Handlers and get called on the main thread anyway. The thread would just wait and then the callback would come after the assert</li>
- * <li>FutureTask - this needs the Runnable / Callable thats passed in to return a result / exception. When the run or call method exits any threads waiting on the FutureRunnable will be released - not good for asyncrounous calls with callbacks on the same thread!</li>
+ * <li>FutureTask - this needs the Runnable / Callable thats passed in to return a result / exception. When the run or call method exits any threads waiting on the FutureRunnable will be released - not good for asynchronous calls with callbacks on the same thread!</li>
  * </or>
- * <p>What this class will do utilise Loopers and Latches to provide a simple to use class for testing those async calls Android style! The extending of HandlerThread means that the run method is looping and wont just close after a passed in Runnables.run() method is called (which would be useless for async). Also it means any handlers that are created by the called async methods can communicate back to this worker thread. If we did this using a thread without a looper this aspect would not work.</p>
+ * <p>What this class will do utilise Loopers (via HandlerThread) and Latches to provide a simple-to-use class for testing those async calls Android style! The use of HandlerThread means that the thread wont die strait after calling the .run() method and wont just close after a passed in Runnables.run() method is called (which would be useless for async). Also it means any handlers that are created by the called async methods can communicate back to this worker thread. If we did this using a thread without a looper this aspect would not work.</p>
  * <p>While its common to mock out a lot of these types of calls I want to test a remote api with multiple user types and a class that does this is very much needed for me!</p>
  *
  * <b>From API level 9 onwards - shouldnt matter as TEST proj only</b>
  */
-public abstract class FutureAsyncTest<T> implements RunnableFuture<FutureAsyncTestResult<T>> {
+public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsyncTestResult<T>> {
 
     private HandlerThread mHandlerThread;
     private FutureAsyncTestResult<T> mResult;
@@ -32,9 +31,9 @@ public abstract class FutureAsyncTest<T> implements RunnableFuture<FutureAsyncTe
     private Handler mHandler;
     private boolean mHasStarted = false;
 
-    public FutureAsyncTest() {
+    public FutureAsyncTester() {
         mCountDownLatch = new CountDownLatch(1);
-        mHandlerThread = new HandlerThread(FutureAsyncTest.class.getName());
+        mHandlerThread = new HandlerThread(FutureAsyncTester.class.getName());
 
     }
 
