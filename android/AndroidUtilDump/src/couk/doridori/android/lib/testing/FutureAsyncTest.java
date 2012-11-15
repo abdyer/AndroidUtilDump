@@ -19,7 +19,7 @@ import java.util.concurrent.*;
  */
 public abstract class FutureAsyncTest<T> extends HandlerThread implements RunnableFuture<FutureAsyncTestResult<T>> {
 
-    private FutureAsyncTestResult mResult;
+    private FutureAsyncTestResult<T> mResult;
     private CountDownLatch mCountDownLatch;
     /**
      * To communicate with the worker looper
@@ -82,8 +82,8 @@ public abstract class FutureAsyncTest<T> extends HandlerThread implements Runnab
         return mResult;
     }
 
-    public synchronized void setResult(FutureAsyncTestResult result){
-        mResult = result;
+    public synchronized void setResult(T result, Exception e){
+        mResult = new FutureAsyncTestResult<T>(result, e);
         mCountDownLatch.countDown();
     }
 }
