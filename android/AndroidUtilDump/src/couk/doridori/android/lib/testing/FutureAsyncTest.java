@@ -94,11 +94,8 @@ public abstract class FutureAsyncTest<T> implements RunnableFuture<FutureAsyncTe
      */
     @Override
     public FutureAsyncTestResult<T> get(long timeout, TimeUnit unit) throws InterruptedException {
-        XLog.d();
         start();
-        XLog.d(Thread.currentThread().getName());
         mCountDownLatch.await(timeout, unit);
-        XLog.d();
         return mResult;
     }
 
@@ -110,7 +107,6 @@ public abstract class FutureAsyncTest<T> implements RunnableFuture<FutureAsyncTe
      * @param e if an exception is caught set this instead (marking failure)
      */
     public synchronized void setResult(T result, Exception e){
-        XLog.d("Future");
         mResult = new FutureAsyncTestResult<T>(result, e);
         mCountDownLatch.countDown();
         mHandlerThread.quit();

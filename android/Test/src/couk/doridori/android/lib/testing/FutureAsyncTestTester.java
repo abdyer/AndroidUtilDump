@@ -34,12 +34,8 @@ public class FutureAsyncTestTester extends TestCase {
             @Override
             public void run() {
                 try {
-                    XLog.d();
-                     Thread.sleep(1);
-                    XLog.d();
+                    Thread.sleep(1);
                     setResult(true, null);
-                    XLog.d();
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -47,9 +43,7 @@ public class FutureAsyncTestTester extends TestCase {
         };
 
         //use a longer timeout
-        XLog.d(Thread.currentThread().getName());
         FutureAsyncTestResult<Boolean> result = futureAsyncTest.get(100, TimeUnit.MILLISECONDS);
-        XLog.d();
         assertTrue(result.result);
     }
 
