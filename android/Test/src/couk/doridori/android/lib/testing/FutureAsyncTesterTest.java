@@ -53,7 +53,7 @@ public class FutureAsyncTesterTest extends TestCase {
             public void run() {
                 try {
                     Thread.sleep(1);
-                    setResult(null, null);
+                    setResult(null, new Exception("test"));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
