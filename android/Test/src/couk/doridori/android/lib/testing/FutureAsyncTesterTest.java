@@ -2,6 +2,7 @@ package couk.doridori.android.lib.testing;
 
 import junit.framework.TestCase;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,6 +82,25 @@ public class FutureAsyncTesterTest extends TestCase {
         //use a longer timeout
         FutureAsyncTestResult<Boolean> result = futureAsyncTester.get(100, TimeUnit.MILLISECONDS);
         assertNotNull(result.exception);
+    }
+
+    public void testGetWaitForever_asyncOpQuickReturn_returnsFalseResult() throws ExecutionException, InterruptedException {
+        final FutureAsyncTester<Boolean> futureAsyncTester = new FutureAsyncTester<Boolean>() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(200);
+                    setResult(false, new Exception("test"));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //use a longer timeout
+        FutureAsyncTestResult<Boolean> result = futureAsyncTester.get();
+        assertNotNull(result);
+        assertFalse(result.result);
     }
 
 }

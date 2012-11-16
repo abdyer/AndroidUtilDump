@@ -7,6 +7,9 @@ import org.apache.http.MethodNotSupportedException;
 import java.util.concurrent.*;
 
 /**
+ * @author Dorian Cussen
+ * Date: 15/11/2012
+ *
  * <p>Class for testing async methods. We cant use CountDownLatch or Futures individually for the following reasons.</p>
  * <or>
  * <li>CountDownLatch - this will basically just cause the main thread to wait - this is not that useful for Android style async callbacks which generally seem to be initiated via Loopers / Handlers and get called on the main thread anyway. The thread would just wait and then the callback would come after the assert</li>
@@ -18,6 +21,7 @@ import java.util.concurrent.*;
  * <b>From API level 9 onwards - shouldnt matter as TEST proj only</b>
  *
  * <p>Check out the test methods for this class in the Test project (same package but in test project) to see how you would use it</p>
+ *
  */
 public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsyncTestResult<T>> {
 
