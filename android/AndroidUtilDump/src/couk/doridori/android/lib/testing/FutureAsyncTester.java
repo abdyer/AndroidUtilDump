@@ -39,9 +39,12 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
 
     }
 
+    /**
+     * Dont call directly - allow the get() methods to call
+     */
     public void start(){
         if(mHasStarted)
-            throw new RuntimeException("only call start() once");
+            throw new RuntimeException("only call start() once. Note it is called auto in both of the get() methods below so you prob wont call explicitly");
 
         mHasStarted = true;
 
