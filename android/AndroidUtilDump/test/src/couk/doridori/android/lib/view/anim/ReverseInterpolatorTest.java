@@ -1,6 +1,5 @@
 package couk.doridori.android.lib.view.anim;
 
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import junit.framework.Assert;
