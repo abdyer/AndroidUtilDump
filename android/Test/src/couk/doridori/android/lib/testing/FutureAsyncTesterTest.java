@@ -10,13 +10,31 @@ import java.util.concurrent.TimeUnit;
  */
 public class FutureAsyncTesterTest extends TestCase {
 
-    public void testGet_asyncOperationTooLong_returnNull() throws InterruptedException {
+    public void testGet_asyncOperationTooLong_returnNullResult() throws InterruptedException {
         final FutureAsyncTester<Boolean> futureAsyncTester = new FutureAsyncTester<Boolean>() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(1000);
                     setResult(true, null);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //use a shorter timeout
+        FutureAsyncTestResult<Boolean> resultWrapper = futureAsyncTester.get(500, TimeUnit.MILLISECONDS);
+        assertNull(resultWrapper);
+    }
+
+    public void testGet_asyncOperationTooLong_returnNullException() throws InterruptedException {
+        final FutureAsyncTester<Boolean> futureAsyncTester = new FutureAsyncTester<Boolean>() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                    setResult(true, new Exception("test"));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

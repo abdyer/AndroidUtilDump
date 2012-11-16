@@ -77,7 +77,7 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
     /**
      * Will call start() and therefore internally call {@link #run()}
      *
-     * @return
+     * @return should never return null as it should wait until the result is received
      * @throws InterruptedException
      * @throws ExecutionException
      */
@@ -93,7 +93,7 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
      *
      * @param timeout
      * @param unit
-     * @return
+     * @return will return null if the timeout set ends up being shorter than the run() method takes to complete (and therefore {@link #setResult(Object, Exception)} has not been called yet})
      * @throws InterruptedException
      */
     @Override
