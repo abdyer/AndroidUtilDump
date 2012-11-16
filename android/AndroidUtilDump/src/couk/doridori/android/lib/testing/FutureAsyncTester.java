@@ -17,7 +17,7 @@ import java.util.concurrent.*;
  *
  * <b>From API level 9 onwards - shouldnt matter as TEST proj only</b>
  *
- * <p>Check out the test methods for this class in the Test project to see how you would use it</p>
+ * <p>Check out the test methods for this class in the Test project (same package but in test project) to see how you would use it</p>
  */
 public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsyncTestResult<T>> {
 
