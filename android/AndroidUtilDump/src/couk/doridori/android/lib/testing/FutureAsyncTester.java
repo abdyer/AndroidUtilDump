@@ -16,6 +16,8 @@ import java.util.concurrent.*;
  * <p>While its common to mock out a lot of these types of calls I want to test a remote api with multiple user types and a class that does this is very much needed for me!</p>
  *
  * <b>From API level 9 onwards - shouldnt matter as TEST proj only</b>
+ *
+ * <p>Check out the test methods for this class in the Test project to see how you would use it</p>
  */
 public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsyncTestResult<T>> {
 
