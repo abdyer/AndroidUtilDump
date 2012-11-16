@@ -10,7 +10,7 @@ import java.util.concurrent.*;
  * @author Dorian Cussen
  * Date: 15/11/2012
  *
- * <p>Class for testing async methods. We could just use a Runnable combined with some wait logic dotted around and a syncronized var to store the result but this class abstracts that boilerstuff away. We cant use CountDownLatch or Futures individually for the following reasons.</p>
+ * <p>Class for testing async methods. We could just use a Runnable combined with some wait logic dotted around and a syncronized var to store the result but this class abstracts that boilerstuff away. This is useful inside of a testing framework like JUnit where we want to Assert some result before exiting the test method in question. We cant use CountDownLatch or Futures individually for the following reasons.</p>
  * <or>
  * <li>CountDownLatch - this will basically just cause the main thread to wait - this is not that useful for Android style async callbacks which generally seem to be initiated via Loopers / Handlers and get called on the main thread anyway. The thread would just wait and then the callback would come after the assert</li>
  * <li>FutureTask - this needs the Runnable / Callable thats passed in to return a result / exception. When the run or call method exits any threads waiting on the FutureRunnable will be released - not good for asynchronous calls with callbacks on the same thread!</li>
