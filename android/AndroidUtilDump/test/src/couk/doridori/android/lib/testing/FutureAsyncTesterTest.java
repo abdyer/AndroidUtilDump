@@ -17,7 +17,7 @@ public class FutureAsyncTesterTest extends TestCase {
             public void run() {
                 try {
                     Thread.sleep(1000);
-                    setResult(true, null);
+                    setResult(true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -35,7 +35,7 @@ public class FutureAsyncTesterTest extends TestCase {
             public void run() {
                 try {
                     Thread.sleep(1000);
-                    setResult(true, new Exception("test"));
+                    setResult(true, new Exception("test"), true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -53,7 +53,7 @@ public class FutureAsyncTesterTest extends TestCase {
             public void run() {
                 try {
                     Thread.sleep(1);
-                    setResult(true, null);
+                    setResult(true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -72,7 +72,7 @@ public class FutureAsyncTesterTest extends TestCase {
             public void run() {
                 try {
                     Thread.sleep(1);
-                    setResult(null, new Exception("test"));
+                    setResult(new Exception("test"));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -90,7 +90,7 @@ public class FutureAsyncTesterTest extends TestCase {
             public void run() {
                 try {
                     Thread.sleep(200);
-                    setResult(false, new Exception("test"));
+                    setResult(false, new Exception("test"), true);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
