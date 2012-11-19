@@ -103,4 +103,26 @@ public class FutureAsyncTesterTest extends TestCase {
         assertFalse(result.result);
     }
 
+    public void testGet_setShouldReturnFalse_returnAtMaxTime() throws InterruptedException {
+        final FutureAsyncTester<Boolean> futureAsyncTester = new FutureAsyncTester<Boolean>() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1);
+                    setResult(true, new Exception("test"), false);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        //use a longer timeout
+        long startTime = System.currentTimeMillis();
+        FutureAsyncTestResult<Boolean> result = futureAsyncTester.get(300, TimeUnit.MILLISECONDS);
+        long finishTime = System.currentTimeMillis();
+        assertTrue(finishTime-startTime >250 && finishTime-startTime<350);
+        assertNotNull(result);
+        assertTrue(result.result);
+    }
+
 }
