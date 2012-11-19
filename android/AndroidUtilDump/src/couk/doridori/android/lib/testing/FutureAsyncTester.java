@@ -97,7 +97,7 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
      *
      * @param timeout
      * @param unit
-     * @return will return null if the timeout set ends up being shorter than the run() method takes to complete (and therefore {@link #setResult(Object, Exception)} has not been called yet})
+     * @return will return null if the timeout set ends up being shorter than the run() method takes to complete (and therefore {@link #setResult(Object, Exception, boolean)} has not been called yet})
      * @throws InterruptedException
      */
     @Override
@@ -113,10 +113,22 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
      *
      * @param result if successful set a result
      * @param e if an exception is caught set this instead (marking failure)
+     * @param returnResult pass in false if this is an intermediary result and you do not want the .get to return yet. Only do this if you are going to set another result at some point after!
      */
-    public synchronized void setResult(T result, Exception e){
+    public synchronized void setResult(T result, Exception e, boolean returnResult){
         mResult = new FutureAsyncTestResult<T>(result, e);
-        mCountDownLatch.countDown();
-        mHandlerThread.quit();
+
+        if(returnResult){
+            mCountDownLatch.countDown();
+            mHandlerThread.quit();
+        }
+    }
+
+    public synchronized void setResult(T result){
+        setResult(result, null, true);
+    }
+
+    public synchronized void setResult(Exception e){
+        setResult(null, e, true);
     }
 }
