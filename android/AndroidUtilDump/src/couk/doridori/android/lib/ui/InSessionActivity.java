@@ -51,9 +51,17 @@ public abstract class InSessionActivity extends SherlockFragmentActivity {
         }
     }
 
+    protected final void onPostResume(){
+        super.onPostResume();
+        if(mIsSessionValid){
+            onPostResumePostSessionCheck();
+        }
+    }
+
     protected abstract void onCreatePostSessionCheck(Bundle savedInstanceState);
     protected void onStartPostSessionCheck(){};
     protected void onResumePostSessionCheck(){};
+    protected void onPostResumePostSessionCheck(){};
 
     /**
      * @return return the class of the activity that initiates the session here
