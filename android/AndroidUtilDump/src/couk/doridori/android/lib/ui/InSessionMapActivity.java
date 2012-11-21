@@ -6,8 +6,10 @@ import com.actionbarsherlock.app.SherlockMapActivity;
 import couk.doridori.android.lib.model.ISession;
 
 /**
- * This activity provides alt lifecycle methods so if the session call fails your activity will not have its own
- * init  functionality called in the traditional lifecycle methods
+ * <p>This activity provides alt lifecycle methods so if the session call fails your activity will not have its own
+ * init  functionality called in the traditional lifecycle methods.</p>
+ *
+ * <p>Make sure when using that any dealloc you do in your closing lifecycle methods has null checks as the corresponding setup methods may not have been called if the session was not validated</p>
  *
  * User: doriancussen
  * Date: 09/11/2012
