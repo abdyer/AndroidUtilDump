@@ -60,7 +60,7 @@ public abstract class InSessionActivity extends SherlockFragmentActivity {
         }
     }
 
-    protected abstract void onCreatePostSessionCheck(Bundle savedInstanceState);
+    protected void onCreatePostSessionCheck(Bundle savedInstanceState){};
     protected void onStartPostSessionCheck(){};
     protected void onResumePostSessionCheck(){};
     protected void onPostResumePostSessionCheck(){};
