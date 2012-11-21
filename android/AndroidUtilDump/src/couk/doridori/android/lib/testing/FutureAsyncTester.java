@@ -124,11 +124,17 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
         }
     }
 
-    public synchronized void setResult(T result){
+    /**
+     * any threads waiting on get(...) will return at this point
+     */
+    public synchronized void setResultAndReturn(T result){
         setResult(result, null, true);
     }
 
-    public synchronized void setResult(Exception e){
+    /**
+     * any threads waiting on get(...) will return at this point
+     */
+    public synchronized void setResultAndReturn(Exception e){
         setResult(null, e, true);
     }
 }
