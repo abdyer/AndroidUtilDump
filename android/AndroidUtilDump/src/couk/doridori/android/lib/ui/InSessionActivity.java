@@ -23,7 +23,7 @@ public abstract class InSessionActivity extends SherlockFragmentActivity {
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(null == getSession()){
+        if(null == getSession() || !getSession().isSessionValid()){
             //session invalid - jump back to session start activity
             XLog.w("Session INVALID - jumping back to start activity");
             mIsSessionValid = false;

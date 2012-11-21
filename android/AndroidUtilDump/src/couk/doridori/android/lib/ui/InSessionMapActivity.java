@@ -22,7 +22,7 @@ public abstract class InSessionMapActivity extends SherlockMapActivity {
     public final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(null == getSession()){
+        if(null == getSession() || !getSession().isSessionValid()){
             //session invalid - jump back to session start activity
             mIsSessionValid = false;
             Intent intent = new Intent(this, getSessionStartActivityClass());
