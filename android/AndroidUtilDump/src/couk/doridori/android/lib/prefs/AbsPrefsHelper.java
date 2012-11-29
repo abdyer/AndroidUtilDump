@@ -44,5 +44,11 @@ public abstract class AbsPrefsHelper {
         }
     }
 
+    public synchronized void removePref(Context ctx, String key){
+        SharedPreferences.Editor editor = getEditor(ctx);
+        editor.remove(key);
+        asyncCommit(editor);
+    }
+
 
 }
