@@ -8,13 +8,14 @@ import android.content.Intent;
  */
 public class Verifier
 {
-    public static boolean anyNull(Object... objects){
-        for(Object o : objects){
-            if(null == o)
-                return true;
+    public static void anyNull(Object... objects) throws NullPointerException {
+        for(int i = 0; i < objects.length; i++){
+            if(null == objects[i]){
+                String errorMsg = "Arg "+i+" == null!!";
+                XLog.e(errorMsg);
+                throw new NullPointerException(errorMsg);
+            }
         }
-
-        return false;
     }
 
     public static boolean anyIntentKeysMissing(Intent intent, String... keys){
