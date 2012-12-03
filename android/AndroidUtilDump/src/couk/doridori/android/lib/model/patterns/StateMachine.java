@@ -20,13 +20,16 @@ public class StateMachine<T extends StateMachine.State> {
 
     /**
      * Convenience method. This can be called when you are finishing with the state machine to trigger any cleanup
-     * code in your last state inside the {@link State#exitingState()} method
+     * code in your last state inside the {@link StateMachine.State#exitingState()} method
+     *
+     * @param finalState you may want to set a final state that is just a stub so any state machine calls after this method has
+     *                   called will do nothing but not throw an NPE. Can be null
      */
-    public void finish(){
+    public void finish(T finalState){
         if(null != mCurrentState)
             mCurrentState.exitingState();
 
-        mCurrentState = null;
+        mCurrentState = finalState;
     }
 
     public T getCurrentState(){
@@ -37,4 +40,6 @@ public class StateMachine<T extends StateMachine.State> {
         public void enteringState(){};
         public void exitingState(){};
     }
+
+
 }
