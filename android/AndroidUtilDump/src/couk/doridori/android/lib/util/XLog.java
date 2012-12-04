@@ -94,6 +94,23 @@ public class XLog {
         }
     }
 
+    /**
+     * print the stack of execution path to log output - sometimes .printStackTrace can be out of order with log statements
+     */
+    public static void dTraceWhole(){
+
+        if (LOGGING_LEVEL_FILTER >= ERRORS_WARNINGS_INFO_DEBUG) {
+            Throwable t = new Throwable();
+            StackTraceElement[] elements = t.getStackTrace();
+            StringBuilder builder = new StringBuilder();
+            for(StackTraceElement e : elements){
+                builder.append("\n\t");
+                builder.append(e);
+            }
+            Log.d(TAG_NO_FILTER, getTrace() + builder.toString());
+        }
+    }
+
     private static String getTrace() {
 
         int depth = 2;
