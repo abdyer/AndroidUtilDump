@@ -10,7 +10,7 @@ public class StateMachine<T extends StateMachine.State> {
 
     private T mCurrentState;
 
-    public void nextState(T nextState){
+    public synchronized void nextState(T nextState){
         if(null != mCurrentState)
             mCurrentState.exitingState();
 
@@ -25,7 +25,7 @@ public class StateMachine<T extends StateMachine.State> {
      * @param finalState you may want to set a final state that is just a stub so any state machine calls after this method has
      *                   called will do nothing but not throw an NPE. Can be null
      */
-    public void finish(T finalState){
+    public synchronized void finish(T finalState){
         if(null != mCurrentState)
             mCurrentState.exitingState();
 
@@ -36,7 +36,7 @@ public class StateMachine<T extends StateMachine.State> {
         }
     }
 
-    public T getCurrentState(){
+    public synchronized T getCurrentState(){
         return mCurrentState;
     }
 
