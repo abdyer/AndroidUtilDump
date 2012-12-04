@@ -29,7 +29,11 @@ public class StateMachine<T extends StateMachine.State> {
         if(null != mCurrentState)
             mCurrentState.exitingState();
 
-        mCurrentState = finalState;
+        if(null != finalState){
+            nextState(finalState);
+        }else{
+            mCurrentState = null;
+        }
     }
 
     public T getCurrentState(){
