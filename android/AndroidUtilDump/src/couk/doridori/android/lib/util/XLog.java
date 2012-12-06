@@ -17,7 +17,7 @@ public class XLog
     static
     {
         if (LOGGING_LEVEL_FILTER >= ALL)
-            Log.v(XLog.class.getName(), "ILog class reloaded");
+            Log.v(XLog.class.getSimpleName(), "ILog class reloaded");
     }
 
     public static void e(String text, Exception e)
@@ -141,7 +141,7 @@ public class XLog
                 builder.append("\n\t");
                 builder.append(e);
             }
-            Log.d(XLog.class.getName(), getTrace().trace + builder.toString());
+            Log.d(XLog.class.getSimpleName(), getTrace().trace + builder.toString());
         }
     }
 
