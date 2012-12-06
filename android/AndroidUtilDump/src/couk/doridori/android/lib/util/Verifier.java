@@ -8,24 +8,32 @@ import android.content.Intent;
  */
 public class Verifier
 {
-    public static void anyNull(Object... objects) throws NullPointerException {
-        for(int i = 0; i < objects.length; i++){
-            if(null == objects[i]){
-                String errorMsg = "Arg "+i+" == null!!";
+    public static void throwIfAnyNull(Object... objects) throws NullPointerException
+    {
+        for (int i = 0; i < objects.length; i++)
+        {
+            if (null == objects[i])
+            {
+                String errorMsg = "Arg " + i + " == null!!";
                 XLog.e(errorMsg);
                 throw new NullPointerException(errorMsg);
             }
         }
     }
 
-    public static boolean anyIntentKeysMissing(Intent intent, String... keys){
-        for(String key : keys){
-            if(!intent.getExtras().containsKey(key))
-                return true;
+    public static boolean anyIntentKeysMissing(Intent intent, String... keys)
+    {
+        boolean anyMissing = false;
+
+        for (String key : keys)
+        {
+            if (!intent.getExtras().containsKey(key))
+            {
+                anyMissing = true;
+                XLog.w("Intent extra missing with key : "+key);
+            }
         }
 
-        return false;
+        return anyMissing;
     }
-
-
 }
