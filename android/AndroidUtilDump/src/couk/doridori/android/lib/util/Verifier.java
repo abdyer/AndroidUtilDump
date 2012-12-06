@@ -23,6 +23,9 @@ public class Verifier
 
     public static void throwIfIntentKeysMissing(Intent intent, String... keys)
     {
+        if(null == intent.getExtras())
+            throw new RuntimeException("No intent extras at all!");
+
         StringBuilder builder = new StringBuilder();
         boolean anyMissing = false;
 
