@@ -21,8 +21,9 @@ public class Verifier
         }
     }
 
-    public static boolean anyIntentKeysMissing(Intent intent, String... keys)
+    public static void throwIfIntentKeysMissing(Intent intent, String... keys)
     {
+        StringBuilder builder = new StringBuilder();
         boolean anyMissing = false;
 
         for (String key : keys)
@@ -31,9 +32,11 @@ public class Verifier
             {
                 anyMissing = true;
                 XLog.w("Intent extra missing with key : "+key);
+                builder.append(key+" ,");
             }
         }
 
-        return anyMissing;
+        if(anyMissing)
+            throw new RuntimeException("Intent key(s) missing : "+builder.toString());
     }
 }
