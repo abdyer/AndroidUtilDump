@@ -22,10 +22,6 @@ public abstract class AbsPrefsHelper {
         return sSharedPreferences;
     }
 
-    public static synchronized String getString(Context context, String key, String defValue){
-        return getDefaultSharedPreferences(context).getString(key, defValue);
-    }
-
     public static synchronized SharedPreferences.Editor getEditor(Context ctx){
         return getDefaultSharedPreferences(ctx).edit();
     }
@@ -44,10 +40,20 @@ public abstract class AbsPrefsHelper {
         }
     }
 
-    public synchronized void removePref(Context ctx, String key){
+    public static synchronized void removePref(Context ctx, String key){
         SharedPreferences.Editor editor = getEditor(ctx);
         editor.remove(key);
         asyncCommit(editor);
+    }
+
+    public static synchronized void asyncPutString(Context ctx, String key, String val){
+        SharedPreferences.Editor editor = getEditor(ctx);
+        editor.putString(key, val);
+        asyncCommit(editor);
+    }
+
+    public static synchronized String getString(Context context, String key, String defValue){
+        return getDefaultSharedPreferences(context).getString(key, defValue);
     }
 
 
