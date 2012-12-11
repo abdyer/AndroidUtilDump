@@ -137,4 +137,14 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
     public synchronized void setResultAndReturn(Exception e){
         setResult(null, e, true);
     }
+
+    /**
+     * You probably want to just get this from calling {@link #get()} but if you want to grab inside your run() method this will do
+     *
+     * @return may be null
+     */
+    public FutureAsyncTestResult<T> getResult()
+    {
+        return mResult;
+    }
 }
