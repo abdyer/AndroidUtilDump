@@ -58,7 +58,7 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
     }
 
     /**
-     * Override this and call setResult() methods in your async callbacks
+     * Override this and call setFutureResult() methods in your async callbacks
      */
     @Override
     public abstract void run();
@@ -86,7 +86,7 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
      * @throws ExecutionException
      */
     @Override
-    public FutureAsyncTestResult<T> get() throws InterruptedException, ExecutionException {
+    public FutureAsyncTestResult<T> get() throws InterruptedException {
         start();
         mCountDownLatch.await();
         return mResult;
@@ -97,7 +97,7 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
      *
      * @param timeout
      * @param unit
-     * @return will return null if the timeout set ends up being shorter than the run() method takes to complete (and therefore {@link #setResult(Object, Exception, boolean)} has not been called yet})
+     * @return will return null if the timeout set ends up being shorter than the run() method takes to complete (and therefore {@link #setFutureResult(Object, Exception, boolean)} has not been called yet})
      * @throws InterruptedException
      */
     @Override
@@ -109,13 +109,13 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
 
     /**
      * This should be called from inside your overridden {@link #run()} implementation. These args will be wrapped
-     * and passed back from your get() method.
+     * and passed back from your get() method IF <code>returnResult</code> == true.
      *
      * @param result if successful set a result
      * @param e if an exception is caught set this instead (marking failure)
      * @param returnResult pass in false if this is an intermediary result and you do not want the .get to return yet. Only do this if you are going to set another result at some point after!
      */
-    public synchronized void setResult(T result, Exception e, boolean returnResult){
+    public synchronized void setFutureResult(T result, Exception e, boolean returnResult){
         mResult = new FutureAsyncTestResult<T>(result, e);
 
         if(returnResult){
@@ -125,17 +125,21 @@ public abstract class FutureAsyncTester<T> implements RunnableFuture<FutureAsync
     }
 
     /**
-     * any threads waiting on get(...) will return at this point
+     * Same as calling setFutureResult(result, null, true)
+     *
+     * @param result
      */
-    public synchronized void setResultAndReturn(T result){
-        setResult(result, null, true);
+    public synchronized void setFutureResultAndReturn(T result){
+        setFutureResult(result, null, true);
     }
 
     /**
-     * any threads waiting on get(...) will return at this point
+     * Same as calling setFutureResult(null, e, true)
+     *
+     * @param e the exception
      */
-    public synchronized void setResultAndReturn(Exception e){
-        setResult(null, e, true);
+    public synchronized void setFutureResultAndReturn(Exception e){
+        setFutureResult(null, e, true);
     }
 
     /**
