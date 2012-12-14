@@ -8,7 +8,7 @@ import android.content.Intent;
  */
 public class Verifier
 {
-    public static void throwIfAnyNull(Object... objects) throws NullPointerException
+    public static void throwIfAnyNull(Object... objects)
     {
         for (int i = 0; i < objects.length; i++)
         {
@@ -19,6 +19,27 @@ public class Verifier
                 throw new NullPointerException(errorMsg);
             }
         }
+    }
+
+    public static void throwIfAllNull(Object... objects)
+    {
+        if(objects.length == 0)
+        {
+            throw new NullPointerException("no objects passed in");
+        }
+
+        boolean allNull = true;
+
+        for (int i = 0; i < objects.length; i++)
+        {
+            if (null != objects[i])
+            {
+                allNull = false;
+            }
+        }
+
+        if(allNull)
+            throw new NullPointerException("All NULL!");
     }
 
     public static void throwIfIntentKeysMissing(Intent intent, String... keys)
