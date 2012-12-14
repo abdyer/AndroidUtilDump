@@ -17,6 +17,9 @@ import android.net.NetworkInfo;
  * in onStart() - registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
  * in onStop() - unregisterReceiver(mConnectivityReceiver);
  *
+ * Also in your base activity you could for example show croutons for network state and have this behaviour enabled / disabled
+ * by your subclasses setting a flag
+ *
  * User: doriancussen
  * Date: 31/10/2012
  */
