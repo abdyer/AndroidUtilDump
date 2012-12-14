@@ -12,6 +12,11 @@ import android.net.NetworkInfo;
  *
  * Make sure to set <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> in your manifest
  *
+ * This can be useful to reg in a base activity for your networked app if you are using in multiple places
+ *
+ * in onStart() - registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+ * in onStop() - unregisterReceiver(mConnectivityReceiver);
+ *
  * User: doriancussen
  * Date: 31/10/2012
  */
