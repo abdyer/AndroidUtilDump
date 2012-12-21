@@ -52,6 +52,12 @@ public abstract class AbsPrefsHelper {
         asyncCommit(editor);
     }
 
+    public static synchronized void asyncPutBool(Context ctx, String key, Boolean val){
+        SharedPreferences.Editor editor = getEditor(ctx);
+        editor.putBoolean(key, val);
+        asyncCommit(editor);
+    }
+
     public static synchronized String getString(Context context, String key, String defValue){
         return getDefaultSharedPreferences(context).getString(key, defValue);
     }
