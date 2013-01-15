@@ -62,5 +62,9 @@ public abstract class AbsPrefsHelper {
         return getDefaultSharedPreferences(context).getString(key, defValue);
     }
 
+    public static synchronized boolean getBoolean(Context context, String key, boolean defValue){
+        return getDefaultSharedPreferences(context).getBoolean(key, defValue);
+    }
+
 
 }

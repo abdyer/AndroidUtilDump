@@ -14,7 +14,7 @@ public class Verifier
         {
             if (null == objects[i])
             {
-                String errorMsg = "Arg " + i + " == null!!";
+                String errorMsg = "Arg with index " + i + " == null!!";
                 XLog.e(errorMsg);
                 throw new NullPointerException(errorMsg);
             }
