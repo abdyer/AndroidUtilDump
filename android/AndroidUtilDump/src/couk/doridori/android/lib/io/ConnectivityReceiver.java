@@ -52,7 +52,7 @@ public class ConnectivityReceiver extends BroadcastReceiver{
     /**
      * You should get a callback pretty quickly after registering as the broadcasts are STICKY. This is not documented however
      * so just in case this is made NON-STICKY in the future (which I doubt will happen) you should use the callbacks to inform the user
-     * but maybe not performing blocking behaviour (or just be aware this may change!)
+     * but maybe not performing blocking behaviour (or just be aware this may change and if do perform a manual network state check when this method is called)
      *
      * @param context
      */
