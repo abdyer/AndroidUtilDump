@@ -8,17 +8,21 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * A receiver for checking network status changes.
+ * <p>A receiver for checking network status changes.</p>
  *
- * Make sure to set <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> in your manifest
+ * <p>Make sure to set <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> in your manifest</p>
  *
- * This can be useful to reg in a base activity for your networked app if you are using in multiple places
+ * <p>This can be useful to reg in a base activity for your networked app if you are using in multiple places</p>
  *
- * in onStart() - registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
- * in onStop() - unregisterReceiver(mConnectivityReceiver);
+ * <ul>
+ *     <li>in onStart() - registerReceiver(mConnectivityReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));</li>
+ *     <li>in onStop() - unregisterReceiver(mConnectivityReceiver);</li>
+ * </ul>
  *
- * Also in your base activity you could for example show croutons for network state and have this behaviour enabled / disabled
- * by your subclasses setting a flag
+ * <p>Also in your base activity you could for example show croutons for network state and have this behaviour enabled / disabled
+ * by your subclasses setting a flag </p>
+ *
+ * <p><b>make sure to read the doc for {@link #register(android.content.Context)} also before using</b></p>
  *
  * User: doriancussen
  * Date: 31/10/2012
@@ -44,6 +48,14 @@ public class ConnectivityReceiver extends BroadcastReceiver{
         }
     }
 
+
+    /**
+     * You should get a callback pretty quickly after registering as the broadcasts are STICKY. This is not documented however
+     * so just in case this is made NON-STICKY in the future (which I doubt will happen) you should use the callbacks to inform the user
+     * but maybe not performing blocking behaviour (or just be aware this may change!)
+     *
+     * @param context
+     */
     public void register(Context context){
         context.registerReceiver(this, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
