@@ -4,7 +4,6 @@ import android.util.Log;
 
 public class XLog
 {
-
     private static final int NONE = 0;
     private static final int ERRORS_ONLY = 1;
     private static final int ERRORS_WARNINGS = 2;
