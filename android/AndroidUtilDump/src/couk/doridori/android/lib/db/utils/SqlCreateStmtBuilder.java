@@ -131,7 +131,7 @@ public class SqlCreateStmtBuilder
             StringBuilder builder = new StringBuilder();
             builder.append("PRIMARY KEY");
             if(mAutoIncrement)
-                builder.append(" AUTO INCREMENT");
+                builder.append(" AUTOINCREMENT");
 
             return builder.toString();
         }
