@@ -8,7 +8,7 @@ import couk.doridori.android.lib.util.XLog;
 
 /**
  * <p>This activity provides alt lifecycle methods so if the session call fails your activity will not have its own
- * init  functionality called in the traditional lifecycle methods.</p>
+ * init functionality called in the traditional lifecycle methods.</p>
  *
  * <p>Make sure when using that any dealloc you do in your closing lifecycle methods has null checks as the corresponding setup methods may not have been called if the session was not validated</p>
  *

@@ -103,6 +103,27 @@ public class SqlCreateStmtBuilder
         //may want to add a conflict clause
     }
 
+    public static class PrimaryKey implements CreateConstraint
+    {
+        private final boolean mAutoIncrement;
+
+        public PrimaryKey(boolean autoIncrement)
+        {
+            mAutoIncrement = autoIncrement;
+        }
+
+        @Override
+        public String toSql()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.append("PRIMARY KEY");
+            if(mAutoIncrement)
+                builder.append(" AUTO INCREMENT");
+
+            return builder.toString();
+        }
+    }
+
     public class SqlCreateBuilderException extends RuntimeException
     {
         public SqlCreateBuilderException(String detailMessage)

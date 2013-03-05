@@ -58,4 +58,12 @@ public class SqlCreateStmtBuilderTest extends TestCase
         String sql = builder.build();
         assertEquals(sql, "CREATE TABLE FakeTable (FakeCol TEXT NOT NULL, FakeCol2 INTEGER NOT NULL);");
     }
+
+    public void testBuild_oneColPrimaryKeyAutoInc_correctOutput()
+    {
+        SqlCreateStmtBuilder builder = new SqlCreateStmtBuilder("FakeTable");
+        builder.addCol("FakeCol", SQLiteDataTypes.INTEGER, new SqlCreateStmtBuilder.PrimaryKey(true));
+        String sql = builder.build();
+        assertEquals(sql, "CREATE TABLE FakeTable (FakeCol INTEGER PRIMARY KEY AUTO INCREMENT);");
+    }
 }
