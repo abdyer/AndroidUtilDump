@@ -4,12 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to make it easier to construct CREATE statements. Has a fluid interface. See <a href="http://www.sqlite.org/lang_createtable.html">http://www.sqlite.org/lang_createtable.html</a>
+ * Class to make it easier to construct CREATE statements. See corresponding test class to see usages. Has a fluid interface. See <a href="http://www.sqlite.org/lang_createtable.html">http://www.sqlite.org/lang_createtable.html</a>
  *
  * User: doriancussen
  */
 public class SqlCreateStmtBuilder
 {
+    public static enum ConflictClause
+    {
+        ROLLBACK, ABORT, FAIL, IGNORE, REPLACE;
+
+        @Override
+        public String toString()
+        {
+            return " ON CONFLICT "+this.name();
+        }
+    }
+
     public static final String CREATE_TABLE = "CREATE TABLE ";
 
     private final String mTableName;
@@ -90,6 +101,8 @@ public class SqlCreateStmtBuilder
         public String toSql();
     }
 
+
+
     /**
      * implemented as a seperate class as each constraint is build differently. <a href="http://www.sqlite.org/syntaxdiagrams.html#column-constraint">http://www.sqlite.org/syntaxdiagrams.html#column-constraint</a>
      */
@@ -119,6 +132,30 @@ public class SqlCreateStmtBuilder
             builder.append("PRIMARY KEY");
             if(mAutoIncrement)
                 builder.append(" AUTO INCREMENT");
+
+            return builder.toString();
+        }
+    }
+
+    public static class Unique implements CreateConstraint
+    {
+        private final ConflictClause mClause;
+
+        /**
+         * @param clause can be null
+         */
+        public Unique(ConflictClause clause)
+        {
+            mClause = clause;
+        }
+
+        @Override
+        public String toSql()
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.append("UNIQUE");
+            if(null != mClause)
+                builder.append(mClause.toString());
 
             return builder.toString();
         }

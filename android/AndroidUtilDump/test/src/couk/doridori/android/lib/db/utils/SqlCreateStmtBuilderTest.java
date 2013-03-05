@@ -66,4 +66,12 @@ public class SqlCreateStmtBuilderTest extends TestCase
         String sql = builder.build();
         assertEquals(sql, "CREATE TABLE FakeTable (FakeCol INTEGER PRIMARY KEY AUTO INCREMENT);");
     }
+
+    public void testBuild_oneColUniqueConflictClause_correctOutput()
+    {
+        SqlCreateStmtBuilder builder = new SqlCreateStmtBuilder("FakeTable");
+        builder.addCol("FakeCol", SQLiteDataTypes.INTEGER, new SqlCreateStmtBuilder.Unique(SqlCreateStmtBuilder.ConflictClause.REPLACE));
+        String sql = builder.build();
+        assertEquals(sql, "CREATE TABLE FakeTable (FakeCol INTEGER UNIQUE ON CONFLICT REPLACE);");
+    }
 }
