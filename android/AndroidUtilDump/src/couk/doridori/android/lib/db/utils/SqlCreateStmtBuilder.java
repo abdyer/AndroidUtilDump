@@ -59,6 +59,9 @@ public class SqlCreateStmtBuilder
             builder.append(mCols.get(i).toSQL());
         }
 
+        //add unique contraints at the end
+        Unique.appendUniqueConstraints(builder, mCols);
+
         builder.append(");");
         return builder.toString();
     }
@@ -85,11 +88,32 @@ public class SqlCreateStmtBuilder
 
             for(int i = 0; i < createConstraints.length; i++)
             {
-                builder.append(" ");
-                builder.append(createConstraints[i].toSql());
+                if(createConstraints[i] instanceof Unique)
+                {
+                    //do nothing, will be added at end
+                }
+                else
+                {
+                    builder.append(" ");
+                    builder.append(createConstraints[i].toSql());
+                }
             }
 
             return builder.toString();
+        }
+
+        /**
+         * @return the contraint if it exists, else null
+         */
+        private Unique hasUniqueConstraint()
+        {
+            for(CreateConstraint constraint : createConstraints)
+            {
+                if(constraint instanceof Unique)
+                    return (Unique)constraint;
+            }
+
+            return null;
         }
     }
 
@@ -152,12 +176,47 @@ public class SqlCreateStmtBuilder
         @Override
         public String toSql()
         {
-            StringBuilder builder = new StringBuilder();
-            builder.append("UNIQUE");
-            if(null != mClause)
-                builder.append(mClause.toString());
+            return ""; //return nothing for the individual column def - this is just a flag and we will add the unique constraint at the end of the create statement else sqlite will get very unhappy
+        }
 
-            return builder.toString();
+        /**
+         * We have to do this at the end like CREATE TABLE a (i INT, j INT, UNIQUE(i, j) ON CONFLICT REPLACE); instead of
+         * doing the way specified in the SQLite docs else SQLite will complain
+         */
+        public static void appendUniqueConstraints(StringBuilder builder, List<Col> cols)
+        {
+            int count = 0;
+            ConflictClause conflictClause = null;
+
+            for(Col col : cols)
+            {
+                Unique unique = col.hasUniqueConstraint();
+
+                if(null != unique)
+                {
+                    if(0 == count)
+                    {
+                        builder.append(", UNIQUE(");
+                        builder.append(col.name);
+                        conflictClause = unique.mClause;
+                    }
+                    else
+                    {
+                        if(conflictClause != unique.mClause)
+                            throw new RuntimeException("only support multiple conflict clauses for unique if they are of the same type - need to impl");
+
+                        builder.append(", ");
+                        builder.append(col.name);
+                    }
+
+                    count = count + 1;
+                }
+            }
+
+            if(count > 0)
+            {
+                builder.append(")"+conflictClause.toString());
+            }
         }
     }
 
@@ -169,3 +228,4 @@ public class SqlCreateStmtBuilder
         }
     };
 }
+

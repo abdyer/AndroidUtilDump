@@ -72,6 +72,6 @@ public class SqlCreateStmtBuilderTest extends TestCase
         SqlCreateStmtBuilder builder = new SqlCreateStmtBuilder("FakeTable");
         builder.addCol("FakeCol", SQLiteDataTypes.INTEGER, new SqlCreateStmtBuilder.Unique(SqlCreateStmtBuilder.ConflictClause.REPLACE));
         String sql = builder.build();
-        assertEquals(sql, "CREATE TABLE FakeTable (FakeCol INTEGER UNIQUE ON CONFLICT REPLACE);");
+        assertEquals(sql, "CREATE TABLE FakeTable (FakeCol INTEGER, UNIQUE(FakeCol) ON CONFLICT REPLACE);");
     }
 }
