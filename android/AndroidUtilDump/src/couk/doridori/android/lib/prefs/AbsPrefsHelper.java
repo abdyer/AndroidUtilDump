@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 
+import java.util.concurrent.FutureTask;
+
 /**
  * In your project you can extends this class and add your project specific KEYS
  *
@@ -15,6 +17,12 @@ public abstract class AbsPrefsHelper {
 
     private static SharedPreferences sSharedPreferences;
 
+    /**
+     * Does file IO on calling thread. Can use {@link #getDefaultSharedPrefsAsync(android.content.Context, couk.doridori.android.lib.prefs.AbsPrefsHelper.PrefsLoader)} if on UI
+     *
+     * @param context
+     * @return
+     */
     public static synchronized SharedPreferences getDefaultSharedPreferences(Context context){
         if(sSharedPreferences == null)
             sSharedPreferences = context.getSharedPreferences("defaultPrefs", Context.MODE_PRIVATE);
@@ -24,6 +32,37 @@ public abstract class AbsPrefsHelper {
 
     public static synchronized SharedPreferences.Editor getEditor(Context ctx){
         return getDefaultSharedPreferences(ctx).edit();
+    }
+
+    /**
+     * Loads off the UI thread
+     *
+     * @param context
+     * @param loader
+     */
+    public static synchronized void getDefaultSharedPrefsAsync(final Context context, final PrefsLoader loader)
+    {
+        if(null == sSharedPreferences)
+        {
+            loader.loaded(sSharedPreferences);
+            return;
+        }
+
+        new AsyncTask<Void, Void, SharedPreferences>(){
+            @Override
+            protected SharedPreferences doInBackground(Void... params)
+            {
+                return getDefaultSharedPreferences(context);
+            }
+
+            @Override
+            protected void onPostExecute(SharedPreferences prefs)
+            {
+                sSharedPreferences = prefs;
+                loader.loaded(prefs);
+            }
+        }.execute();
+
     }
 
     public static synchronized void asyncCommit(final SharedPreferences.Editor editor){
@@ -66,5 +105,8 @@ public abstract class AbsPrefsHelper {
         return getDefaultSharedPreferences(context).getBoolean(key, defValue);
     }
 
-
+    public interface PrefsLoader
+    {
+        public void loaded(SharedPreferences prefs);
+    }
 }
