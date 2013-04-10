@@ -3,6 +3,8 @@ package couk.doridori.android.lib.model.patterns;
 /**
  * Simple state machine. If need something that needs to handle a big transition matrix look at the SMC compiler
  *
+ * Takes a generic so you can define you own root states. Can just use {@link StateMachine.State} if you want.
+ *
  * User: doriancussen
  * Date: 05/11/2012
  */

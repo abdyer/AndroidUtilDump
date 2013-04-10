@@ -27,7 +27,7 @@ import android.widget.TextView;
 import couk.doridori.android.lib.R;
 
 /**
- * Like a normal Relative layout apart from this will swap out its views
+ * Like a normal frameL ayout apart from this will swap out its views
  * depending on some data state.
  *
  * You should pass in layout file ids to the empty and loading resId xml
