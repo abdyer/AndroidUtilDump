@@ -8,6 +8,18 @@ import junit.framework.TestCase;
  */
 public class VerifierTests extends TestCase
 {
+    public void testIsAllNotNull_oneNull_returnFalse()
+    {
+        Object[] array = {"one", "two", null, "four"};
+        assertFalse(Verifier.isAllNotNull(array));
+    }
+
+    public void testIsAllNotNull_nonNull_returnTrue()
+    {
+        Object[] array = {"one", "two", "three", "four"};
+        assertTrue(Verifier.isAllNotNull(array));
+    }
+
     public void testThrowIfAllNull_allNull_shouldThrowNPE()
     {
         Object[] nullArray = {null, null, null, null};

@@ -8,6 +8,17 @@ import android.content.Intent;
  */
 public class Verifier
 {
+    public static boolean isAllNotNull(Object... objects)
+    {
+        for(Object object : objects)
+        {
+            if(null == object)
+                return false;
+        }
+
+        return true;
+    }
+
     public static void throwIfAnyNull(Object... objects)
     {
         for (int i = 0; i < objects.length; i++)
