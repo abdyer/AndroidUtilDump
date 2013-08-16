@@ -17,12 +17,29 @@ public class GroupedListView extends ListView
 {
 	private GroupedListAdapter mGroupedListAdapter;
 	private OnChildClickListener mOnChildClickListener;
-	
-	public GroupedListView(Context context, AttributeSet attrs)
-	{
-		super(context, attrs);
-		setOnItemClickListener(mOnItemClickListener);
-	}
+
+    public GroupedListView(Context context)
+    {
+        super(context);
+        init();
+    }
+
+    public GroupedListView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+        init();
+    }
+
+    public GroupedListView(Context context, AttributeSet attrs, int defStyle)
+    {
+        super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init()
+    {
+        setOnItemClickListener(mOnItemClickListener);
+    }
 
 	@Override
 	public void setAdapter(ListAdapter adapter)
