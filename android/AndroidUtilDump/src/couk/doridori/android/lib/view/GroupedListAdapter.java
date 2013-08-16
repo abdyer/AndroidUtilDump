@@ -28,7 +28,7 @@ public abstract class GroupedListAdapter extends BaseAdapter
 			//add the group size
 			countTotal += getGroupSize(i);
 		}
-		XLog.d("count:" + countTotal);
+
 		return countTotal;
 	}
 
@@ -104,7 +104,6 @@ public abstract class GroupedListAdapter extends BaseAdapter
 	 */
 	public GroupedPosition getGroupAndChildPosition(int position)
 	{
-		XLog.d("position:"+position);
 		//the current index of the view being checked
 		int indexOfGroupHeading = 0;
 		//the current group being checked
