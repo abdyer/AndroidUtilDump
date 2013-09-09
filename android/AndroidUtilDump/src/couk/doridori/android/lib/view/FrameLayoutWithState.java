@@ -27,7 +27,7 @@ import android.widget.TextView;
 import couk.doridori.android.lib.R;
 
 /**
- * Like a normal frameL ayout apart from this will swap out its views
+ * Like a normal frameLayout apart from this will swap out its views
  * depending on some data state.
  *
  * You should pass in layout file ids to the empty and loading resId xml
@@ -35,6 +35,8 @@ import couk.doridori.android.lib.R;
  *
  * If you supply your own error layout it must have a textView with the id
  * 'state_error_text'
+ *
+ * Animations can be setup but using layoutTransitions = true in the manifest (unless they have been globally disabled in the user settings)
  *
  * @author dorian.cussen
  */
@@ -231,25 +233,11 @@ public class FrameLayoutWithState extends FrameLayout {
 
             case CONTENT:
 
-                //only animates if the state has changed TODO should make so anim set by user
-                //boolean shouldAnimate = mContentView.getVisibility() != View.VISIBLE && animate;
-
                 // show content view
                 mLoadingView.setVisibility(View.GONE);
                 mEmptyView.setVisibility(View.GONE);
                 mContentView.setVisibility(View.VISIBLE);
                 mErrorView.setVisibility(View.GONE);
-
-                // if not already vis then animate in
-                /*
-                if (shouldAnimate) {
-                    // apply anim
-                    Animation anim = new AlphaAnimation(0, 1);
-                    anim.setDuration(500);
-                    mContentView.startAnimation(anim);
-                }
-                */
-
                 break;
 
             case EMPTY:
