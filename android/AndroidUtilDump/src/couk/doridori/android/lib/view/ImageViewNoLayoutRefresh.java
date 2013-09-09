@@ -6,7 +6,8 @@ import android.widget.ImageView;
 /**
  * ImageView that does not cause its parent to requestLAyout when the bitmap is changed
  * (stops lists skipping when their images are being loaded async). This means the dimensions
- * of this view should be set explicitly
+ * of this view should be set explicitly. Another approach can be updating the exisiting drawable
+ * object for an imageView (not calling setDrawable) as this seems to have the same effect - like the Picasso lib (ImageViewAction) - saying that the lib does end up calling setImageDrawable...
  * 
  * @author dorian.cussen
  */
