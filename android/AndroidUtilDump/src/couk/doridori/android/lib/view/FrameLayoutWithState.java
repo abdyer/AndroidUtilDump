@@ -52,6 +52,8 @@ import couk.doridori.android.lib.R;
  * If you supply your own error layout it must have a textView with the id
  * 'state_error_text'
  *
+ * If your going to use the same loading / error / empty views (with differnt text) just set them in the source below and make sure the contents ids for the textViews match
+ *
  * Animations can be setup but using layoutTransitions = true in the manifest (unless they have been globally disabled in the user settings)
  */
 public class FrameLayoutWithState extends FrameLayout {
