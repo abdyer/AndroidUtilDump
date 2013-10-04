@@ -54,6 +54,10 @@ import couk.doridori.android.lib.R;
  *
  * If your going to use the same loading / error / empty views (with differnt text) just set them in the source below and make sure the contents ids for the textViews match
  *
+ * Will auto hide all children on start
+ *
+ * <b>WARNING - Samsung s3 running 4.0.4 cannot handle a view changing from GONE to VISIBLE with <code>animateLayoutChanges=true</code>. As this is a Framelayout you can either change to INVISIBLE instead of GONE (less efficent as will still be measured when not vis) OR implement custom show hide anims for this class. Prob best to just not use animateLayoutChanges. Custom animations solution is untested however :)<b/>
+ *
  * Animations can be setup but using layoutTransitions = true in the manifest (unless they have been globally disabled in the user settings)
  */
 public class FrameLayoutWithState extends FrameLayout {
@@ -116,7 +120,7 @@ public class FrameLayoutWithState extends FrameLayout {
         if(mContentView.getVisibility() != View.GONE)
             throw new RuntimeException("need to set gone in xml or will flicker");
 
-        mContentView.setVisibility(View.VISIBLE);
+        mContentView.setVisibility(View.GONE);
 
         mLoadingView = layoutInflater.inflate(mLoadingResId, this, false);
         mLoadingView.setVisibility(View.GONE);
