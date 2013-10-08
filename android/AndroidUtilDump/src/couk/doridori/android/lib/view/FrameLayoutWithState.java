@@ -56,9 +56,11 @@ import couk.doridori.android.lib.R;
  *
  * Will auto hide all children on start
  *
- * <b>WARNING - Samsung s3 running 4.0.4 cannot handle a view changing from GONE to VISIBLE with <code>animateLayoutChanges=true</code>. As this is a Framelayout you can either change to INVISIBLE instead of GONE (less efficent as will still be measured when not vis) OR implement custom show hide anims for this class. Prob best to just not use animateLayoutChanges. Custom animations solution is untested however :)<b/>
+ * <b>WARNING - Samsung s3 running 4.0.4 (possibly a 4.0.4 bug) cannot handle a view changing from GONE to VISIBLE with <code>animateLayoutChanges=true</code>. As this is a Framelayout you can either change to INVISIBLE instead of GONE (less efficent as will still be measured when not vis) OR implement custom show hide anims for this class. Prob best to just not use animateLayoutChanges. Custom animations solution is untested however :)<b/> Think this has something to do with view invlidation as a PTR etc will then show the view
  *
  * Animations can be setup but using layoutTransitions = true in the manifest (unless they have been globally disabled in the user settings)
+ *
+ * TODO: should add the child views the same way as done for AOSP views - and not via a post in onLayout. Causing issues like not being abel to grab child views after setContentView is called
  */
 public class FrameLayoutWithState extends FrameLayout {
 
@@ -68,6 +70,8 @@ public class FrameLayoutWithState extends FrameLayout {
     private boolean mHasBeenLayedOut;
     private String mErrorText = null;
     private String mEmptyText;
+
+    private OnClickListener mErrorClickListener;
 
     public FrameLayoutWithState(Context context, AttributeSet attrs, int defStyle) {
 
@@ -160,6 +164,8 @@ public class FrameLayoutWithState extends FrameLayout {
                     if(mEmptyText != null){
                         setEmptyText(mEmptyText);
                     }
+                    if(null != mErrorClickListener)
+                        mErrorView.setOnClickListener(mErrorClickListener);
                 }
             });
         }
@@ -208,6 +214,14 @@ public class FrameLayoutWithState extends FrameLayout {
             showViewBasedOnState(true);
             setEmptyText(mEmptyText);
         }
+    }
+
+    public void setOnClickForError(OnClickListener onClickListener)
+    {
+        if(mHasBeenLayedOut)
+            mErrorView.setOnClickListener(onClickListener);
+        else
+            mErrorClickListener = onClickListener;
     }
 
     /**
