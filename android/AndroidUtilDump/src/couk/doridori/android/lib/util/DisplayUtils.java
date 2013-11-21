@@ -9,7 +9,7 @@ public class DisplayUtils
     /**
      * May not be accurate due to system bars / OEMs etc. See http://stackoverflow.com/questions/15055458/detect-7-inch-and-10-inch-tablet-programmatically
      *
-     * Could also use getContext().getResources().getConfiguration()#smallest... if targeting api 13+
+     * Could also use getContext().getResources().getConfiguration()#smallestWidth... if targeting api 13+
      *
      * @return
      */
