@@ -1,6 +1,7 @@
 package couk.doridori.android.lib.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.DisplayMetrics;
 
 public class DisplayUtils
@@ -8,13 +9,14 @@ public class DisplayUtils
     /**
      * May not be accurate due to system bars / OEMs etc. See http://stackoverflow.com/questions/15055458/detect-7-inch-and-10-inch-tablet-programmatically
      *
-     * @param activity
+     * Could also use getContext().getResources().getConfiguration()#smallest... if targeting api 13+
+     *
      * @return
      */
-    public static float getSmallestWidthDp(Activity activity)
+    public static float getSmallestWidthDp(Context context)
     {
         DisplayMetrics metrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        context.getResources().getDisplayMetrics();
 
         int widthPixels = metrics.widthPixels;
         int heightPixels = metrics.heightPixels;
