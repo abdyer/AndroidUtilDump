@@ -60,7 +60,9 @@ import couk.doridori.android.lib.R;
  *
  * Animations can be setup but using layoutTransitions = true in the manifest (unless they have been globally disabled in the user settings)
  *
- * TODO: should add the child views the same way as done for AOSP views - and not via a post in onLayout. Causing issues like not being abel to grab child views after setContentView is called
+ * TODO: should add the child views the same way as done for AOSP views i.e https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/widget/DatePicker.java - and not via a post in onLayout. Causing issues like not being abel to grab child views after setContentView is called and also showing two states at once etc
+ *
+ * TODO: should add children as xml (could use include) and either use id in paretn to specify type or attributes on children - then dont have to mess around with programming view adding and just rely on normal inflate
  */
 public class FrameLayoutWithState extends FrameLayout {
 
@@ -147,6 +149,7 @@ public class FrameLayoutWithState extends FrameLayout {
         if (mContentView == null) // have not got a handle to the content view
         // yet
         {
+            //TODO bug this can be called more than once and therefore will fill with multiple views and cause duplicate state errors and so on
             // need to post these operations in a handler otherwise will not display when > 3.0.
             // not sure why this is but presumably some method thats called after onLayout() and
             // before any posted runnables are run is stopping it working as expected - Dori
