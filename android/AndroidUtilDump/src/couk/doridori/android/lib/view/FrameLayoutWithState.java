@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import couk.doridori.android.lib.R;
@@ -63,13 +64,13 @@ import couk.doridori.android.lib.R;
  * TODO: should add the child views the same way as done for AOSP views i.e https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/core/java/android/widget/DatePicker.java - and not via a post in onLayout. Causing issues like not being abel to grab child views after setContentView is called and also showing two states at once etc
  *
  * TODO: should add children as xml (could use include) and either use id in paretn to specify type or attributes on children - then dont have to mess around with programming view adding and just rely on normal inflate
+ *
  */
 public class FrameLayoutWithState extends FrameLayout {
 
     private ViewState mCurrentViewState = ViewState.NOT_INIT;
     private int mLoadingResId, mEmptyResId, mContentResId, mErrorResId;
     private View mLoadingView, mEmptyView, mContentView, mErrorView;
-    private boolean mHasBeenLayedOut;
     private String mErrorText = null;
     private String mEmptyText;
 
@@ -79,12 +80,14 @@ public class FrameLayoutWithState extends FrameLayout {
 
         super(context, attrs, defStyle);
         getCustomAttrs(context, attrs);
+        inflateStateViews();
     }
 
     public FrameLayoutWithState(Context context, AttributeSet attrs) {
 
         super(context, attrs);
         getCustomAttrs(context, attrs);
+        inflateStateViews();
     }
 
     public FrameLayoutWithState(Context context) {
@@ -116,17 +119,7 @@ public class FrameLayoutWithState extends FrameLayout {
 
         LayoutInflater layoutInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // dont inflate - just grab from contents
-        mContentView = findViewById(mContentResId);
-
-        if (mContentView == null) {
-            throw new NullPointerException("contentView cannot be null, have you set the contentView attribute");
-        }
-
-        if(mContentView.getVisibility() != View.GONE)
-            throw new RuntimeException("need to set gone in xml or will flicker");
-
-        mContentView.setVisibility(View.GONE);
+        //content view is obtained on first state manipulation. This is becuase this method is called in the contructor which would be before any XML views have actually been inflated and added by the system.
 
         mLoadingView = layoutInflater.inflate(mLoadingResId, this, false);
         mLoadingView.setVisibility(View.GONE);
@@ -141,39 +134,6 @@ public class FrameLayoutWithState extends FrameLayout {
         addView(mErrorView);
     }
 
-    @Override
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-
-        super.onLayout(changed, l, t, r, b);
-
-        if (mContentView == null) // have not got a handle to the content view
-        // yet
-        {
-            //TODO bug this can be called more than once and therefore will fill with multiple views and cause duplicate state errors and so on
-            // need to post these operations in a handler otherwise will not display when > 3.0.
-            // not sure why this is but presumably some method thats called after onLayout() and
-            // before any posted runnables are run is stopping it working as expected - Dori
-            new Handler().post(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    mHasBeenLayedOut = true;
-                    inflateStateViews();
-                    showViewBasedOnState(true);
-                    if(mErrorText != null){
-                        setErrorText(mErrorText);
-                    }
-                    if(mEmptyText != null){
-                        setEmptyText(mEmptyText);
-                    }
-                    if(null != mErrorClickListener)
-                        mErrorView.setOnClickListener(mErrorClickListener);
-                }
-            });
-        }
-    }
-
     public void setViewState(ViewState newViewState) {
         setViewState(newViewState, true);
     }
@@ -186,9 +146,7 @@ public class FrameLayoutWithState extends FrameLayout {
 
         mCurrentViewState = newViewState;
 
-        if (mHasBeenLayedOut) {
-            showViewBasedOnState(animate);
-        }
+        showViewBasedOnState(animate);
     }
 
     /**
@@ -199,10 +157,8 @@ public class FrameLayoutWithState extends FrameLayout {
         mCurrentViewState = ViewState.ERROR;
         mErrorText = msg;
 
-        if (mHasBeenLayedOut) {
-            showViewBasedOnState(true);
-            setErrorText(mErrorText);
-        }
+        showViewBasedOnState(true);
+        setErrorText(mErrorText);
     }
 
     /**
@@ -213,18 +169,13 @@ public class FrameLayoutWithState extends FrameLayout {
         mCurrentViewState = ViewState.EMPTY;
         mEmptyText = msg;
 
-        if (mHasBeenLayedOut) {
-            showViewBasedOnState(true);
-            setEmptyText(mEmptyText);
-        }
+        showViewBasedOnState(true);
+        setEmptyText(mEmptyText);
     }
 
     public void setOnClickForError(OnClickListener onClickListener)
     {
-        if(mHasBeenLayedOut)
-            mErrorView.setOnClickListener(onClickListener);
-        else
-            mErrorClickListener = onClickListener;
+        mErrorView.setOnClickListener(onClickListener);
     }
 
     /**
@@ -258,6 +209,19 @@ public class FrameLayoutWithState extends FrameLayout {
      * @param animate true if should animate when showing content
      */
     private void showViewBasedOnState(boolean animate) {
+
+        // first time this is called contentView ref should/will be null - see #inflateStateViews
+        if(mContentView == null)
+        {
+            mContentView = findViewById(mContentResId);
+
+            if (mContentView == null) {
+                throw new NullPointerException("contentView cannot be null, have you set the contentView attribute");
+            }
+
+            if(mContentView.getVisibility() != View.GONE)
+                throw new RuntimeException("need to set gone in xml or will flicker");
+        }
 
         switch (mCurrentViewState) {
             case NOT_INIT:
